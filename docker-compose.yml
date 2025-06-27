@@ -3,16 +3,12 @@ services:
     image: lscr.io/linuxserver/jellyfin:latest
     container_name: jellyfin
     environment:
-      - PUID=1032
-      - PGID=65536
-      - TZ=Europe/Zurich
       - JELLYFIN_PublishedServerUrl=https://jellyfin.triky.net  #optional
       - DOCKER_MODS=linuxserver/mods:jellyfin-opencl-intel
     devices:
       - /dev/dri/renderD128:/dev/dri/renderD128	  
     volumes:
       - /volume1/docker/jellyfin2/config:/config
-      - /volume1/docker/jellyfin2/cache:/cache
       - /volume2/media:/media
       - /volume3/media02:/media02
     ports:
