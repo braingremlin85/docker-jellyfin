@@ -1,23 +1,28 @@
 services:
   jellyfin:
-    image: lscr.io/linuxserver/jellyfin:latest
+    image: jellyfin/jellyfin
     container_name: jellyfin
-    environment:
-      - JELLYFIN_PublishedServerUrl=https://jellyfin.triky.net  #optional
-      - DOCKER_MODS=linuxserver/mods:jellyfin-opencl-intel
-    devices:
-      - /dev/dri/renderD128:/dev/dri/renderD128	  
+    user: 1032:65536 # jellyfin:mediaman
     volumes:
-      - /volume1/docker/jellyfin2/config:/config
-      - /volume2/media:/media
-      - /volume3/media02:/media02
+      - /volume1/docker/jellyfin/config:/config
+      - /volume1/docker/jellyfin/cache:/cache
+      - type: bind
+        source: /volume2/media
+        target: /media
+      - type: bind
+        source: /volume3/media02
+        target: /media02
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
     ports:
       - 8096:8096
-      - 8920:8920 #optional
-      - 7359:7359/udp #optional
-      # - 1900:1900/udp #optional # in use by dsm
-    security_opt:
-      - no-new-privileges:true
-    env_file:
-      - stack.env	  
-    restart: unless-stopped
+    environment:    
+      - GIDLIST=937 # videodriver GID
+      #- TZ=Europe/Zurich
+      #- DOCKER_MODS=linuxserver/mods:jellyfin-opencl-intel	  
+    # Optional - alternative address used for autodiscovery environment:
+      - JELLYFIN_PublishedServerUrl=https://jellyfin.triky.net      
+    restart: 'unless-stopped'
+    # Optional - may be necessary for docker healthcheck to pass if running in host network mode
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'

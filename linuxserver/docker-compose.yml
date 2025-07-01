@@ -1,0 +1,23 @@
+services:
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    environment:
+      - JELLYFIN_PublishedServerUrl=https://jellyfin.triky.net  #optional
+      - DOCKER_MODS=linuxserver/mods:jellyfin-opencl-intel
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128	  
+    volumes:
+      - /volume1/docker/jellyfin2/config:/config
+      - /volume2/media:/media
+      - /volume3/media02:/media02
+    ports:
+      - 8096:8096
+      - 8920:8920 #optional
+      - 7359:7359/udp #optional
+      # - 1900:1900/udp #optional # in use by dsm
+    security_opt:
+      - no-new-privileges:true
+    env_file:
+      - stack.env	  
+    restart: unless-stopped
