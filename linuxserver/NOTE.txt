@@ -1,0 +1,2 @@
+problema:
+cerca i media in dei path che non esistono e blocca il db (/config/data/root/default/Movie)
